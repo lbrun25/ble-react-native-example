@@ -1,11 +1,5 @@
 import React, {useEffect, useReducer, useState} from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {DeviceCard} from '../components/DeviceCard';
@@ -15,8 +9,6 @@ import {Button} from '../components/Button';
 
 const manager = new BleManager();
 
-// Reducer to add only the devices which have not been added yet
-// When the bleManager search for devices, each time it detect a ble device, it returns the ble device even if this one has already been returned
 const reducer = (
   state: Device[],
   action: {type: 'ADD_DEVICE'; payload: Device} | {type: 'CLEAR'},
@@ -25,7 +17,6 @@ const reducer = (
     case 'ADD_DEVICE':
       const {payload: device} = action;
 
-      // check if the detected device is not already added to the list
       if (device && !state.find(dev => dev.id === device.id)) {
         return [...state, device];
       }
@@ -38,23 +29,16 @@ const reducer = (
 };
 
 const HomeScreen = () => {
-  // reducer to store and display detected ble devices
   const [scannedDevices, dispatch] = useReducer(reducer, []);
-
-  // state to give the user a feedback about the manager scanning devices
   const [isLoading, setIsLoading] = useState(false);
 
   const scanDevices = () => {
-    // display the Activityindicator
     setIsLoading(true);
 
-    // scan devices
     manager.startDeviceScan(null, null, (error, scannedDevice) => {
       if (error) {
         console.warn(error);
       }
-
-      // if a device is detected add the device to the list by dispatching the action into the reducer
       if (scannedDevice) {
         dispatch({type: 'ADD_DEVICE', payload: scannedDevice});
       }
@@ -78,17 +62,12 @@ const HomeScreen = () => {
           onPress={() => dispatch({type: 'CLEAR'})}
           style={styles.clearButton}
         />
-        {isLoading ? (
-          <View style={styles.activityIndicatorContainer}>
-            <ActivityIndicator color={'teal'} size={25} />
-          </View>
-        ) : (
-          <Button
-            label="Scan devices"
-            onPress={scanDevices}
-            style={styles.scanButton}
-          />
-        )}
+        <Button
+          label="Scan devices"
+          onPress={scanDevices}
+          style={styles.scanButton}
+          loading={isLoading}
+        />
       </View>
     </View>
   );

@@ -20,7 +20,6 @@ const CharacteristicCard = ({char}: CharacteristicCardProps) => {
   const [descriptor, setDescriptor] = useState<string | null>('');
 
   useEffect(() => {
-    // discover characteristic descriptors
     char.descriptors().then(desc => {
       desc[0]?.read().then(val => {
         if (val) {
@@ -29,22 +28,18 @@ const CharacteristicCard = ({char}: CharacteristicCardProps) => {
       });
     });
 
-    // read on the characteristic 👏
     char.monitor((err, cha) => {
       if (err) {
         console.warn('ERROR');
         return;
       }
-      // each received value has to be decoded with a Base64 algorythm you can find on the Internet (or in my repository 😉)
       setMeasure(decodeBleString(cha?.value));
     });
   }, [char]);
 
-  // write on a charactestic the number 6 (e.g.)
   const writeCharacteristic = () => {
-    // encode the string with the Base64 algorythm
     char
-      .writeWithResponse(Base64.encode('6'))
+      .writeWithResponse(Base64.encode('0'))
       .then(() => {
         console.warn('Success');
       })

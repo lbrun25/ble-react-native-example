@@ -16,7 +16,10 @@ type ButtonProps = {
 
 export const Button = ({onPress, label, style, loading}: ButtonProps) => {
   return (
-    <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
+    <TouchableOpacity
+      style={[styles.button, style]}
+      onPress={onPress}
+      disabled={loading}>
       {loading ? (
         <ActivityIndicator color="white" />
       ) : (
