@@ -1,9 +1,10 @@
 import {StackScreenProps} from '@react-navigation/stack';
 import React, {useCallback, useEffect, useState} from 'react';
-import {Text, ScrollView, Button, View, StyleSheet} from 'react-native';
+import {Text, ScrollView, View, StyleSheet} from 'react-native';
 import {Service} from 'react-native-ble-plx';
 import {ServiceCard} from '../components/ServiceCard';
 import {RootStackParamList} from '../navigation';
+import { Button } from "../components/Button";
 
 const DeviceScreen = ({
   route,
@@ -52,7 +53,11 @@ const DeviceScreen = ({
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Button title="disconnect" onPress={disconnectDevice} />
+      <Button
+        label="Disconnect"
+        onPress={disconnectDevice}
+        style={styles.disconnectButton}
+      />
       <View>
         <View style={styles.header}>
           <Text>{`Id : ${device.id}`}</Text>
@@ -64,7 +69,10 @@ const DeviceScreen = ({
           <Text>{`UUIDS : ${device.serviceUUIDs}`}</Text>
         </View>
         {/* Display a list of all services */}
-        {services && services.map(service => <ServiceCard service={service} />)}
+        {services &&
+          services.map(service => (
+            <ServiceCard service={service} key={service.id} />
+          ))}
       </View>
     </ScrollView>
   );
@@ -74,7 +82,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 12,
   },
-
   header: {
     backgroundColor: 'teal',
     marginBottom: 12,
@@ -84,6 +91,10 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 4,
     padding: 12,
+  },
+  disconnectButton: {
+    backgroundColor: 'red',
+    marginBottom: 16,
   },
 });
 

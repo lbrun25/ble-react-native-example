@@ -1,7 +1,6 @@
 import React, {useEffect, useReducer, useState} from 'react';
 import {
   ActivityIndicator,
-  Button,
   FlatList,
   StyleSheet,
   Text,
@@ -12,6 +11,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {DeviceCard} from '../components/DeviceCard';
 import {BleManager, Device} from 'react-native-ble-plx';
 import {theme} from '../theme';
+import {Button} from '../components/Button';
 
 const manager = new BleManager();
 
@@ -70,19 +70,24 @@ const HomeScreen = () => {
   const ListHeaderComponent = () => (
     <View style={styles.body}>
       <View style={styles.sectionContainer}>
-        <Text style={styles.sectionTitle}>Step One</Text>
+        <Text style={styles.sectionTitle}>Bluetooth Low Energy</Text>
       </View>
       <View style={styles.sectionContainer}>
         <Button
-          title="Clear devices"
+          label="Clear devices"
           onPress={() => dispatch({type: 'CLEAR'})}
+          style={styles.clearButton}
         />
         {isLoading ? (
           <View style={styles.activityIndicatorContainer}>
             <ActivityIndicator color={'teal'} size={25} />
           </View>
         ) : (
-          <Button title="Scan devices" onPress={scanDevices} />
+          <Button
+            label="Scan devices"
+            onPress={scanDevices}
+            style={styles.scanButton}
+          />
         )}
       </View>
     </View>
@@ -119,17 +124,18 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: Colors.black,
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
   content: {
     backgroundColor: theme.colors.secondary,
     paddingHorizontal: theme.spacing * 2,
   },
   activityIndicatorContainer: {marginVertical: 6},
+  clearButton: {
+    backgroundColor: 'red',
+    marginBottom: 8,
+  },
+  scanButton: {
+    marginBottom: 16,
+  },
 });
 
 export {HomeScreen};
